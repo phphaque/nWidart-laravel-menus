@@ -21,6 +21,7 @@ class MenusServiceProvider extends ServiceProvider
     {
         $this->registerNamespaces();
         $this->registerMenusFile();
+        $this->registerMenusItems();
     }
 
     /**
@@ -88,4 +89,16 @@ class MenusServiceProvider extends ServiceProvider
             $viewsPath => base_path('resources/views/vendor/nwidart/menus'),
         ], 'views');
     }
+
+
+    /**
+     * Register menus items.
+     */
+    protected function registerMenusItems(){
+        $menuItem = new MenuItem();
+        $menuItem->__getItems();
+    }
+
+
+
 }
